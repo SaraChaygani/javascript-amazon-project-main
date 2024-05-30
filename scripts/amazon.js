@@ -51,11 +51,13 @@ products.forEach(product => {
 });
 
 document.querySelector('.js-products-grid').innerHTML = productsHTML;
+
+//Make the add to cart button interactive
 document.querySelectorAll('.js-add-to-cart-button')
   .forEach(button => {
     button.addEventListener('click', () => {
       const productId = button.dataset.productId;
-      let cartItem;
+      let cartItem, cartquantity = 0;
       cart.forEach(item => {
         if (item.productId === productId) {
           cartItem = item;
@@ -71,6 +73,12 @@ document.querySelectorAll('.js-add-to-cart-button')
           quantity: 1
         });
       }
-      console.log(cart);
+
+      //Calculate total Quantity in the cart
+      cart.forEach(item => {
+        cartquantity += item.quantity;
+      });
+
+      document.querySelector('.js-cart-quantity').innerHTML = cartquantity;
     });
   });

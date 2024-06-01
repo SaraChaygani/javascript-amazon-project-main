@@ -1,6 +1,7 @@
-import { cart } from '../data/cart.js';
+import { cart, addToCart } from '../data/cart.js';
 import { products } from '../data/products.js';
 
+//Loarding products into the main page
 let productsHTML = '';
 products.forEach(product => {
   productsHTML += `        
@@ -25,8 +26,8 @@ products.forEach(product => {
         $${(product.priceCents / 100).toFixed(2)}
       </div>
 
-      <div class="product-quantity-container">
-        <select>
+      <div class="product-quantity-container}">
+        <select class="js-quantity-selector-${product.id}">
           <option selected value="1">1</option>
           <option value="2">2</option>
           <option value="3">3</option>
@@ -53,35 +54,27 @@ products.forEach(product => {
     </div>`;
 });
 
-document.querySelector('.js-products-grid').innerHTML = productsHTML;
 
 //Make the add to cart button interactive
+document.querySelector('.js-products-grid').innerHTML = productsHTML;
+
+
+//Calculate and update total Quantity in the cart
+function updateCartQuantity() {
+  let cartQuantity = 0
+  cart.forEach(item => {
+    cartQuantity += item.quantity;
+  });
+  document.querySelector('.js-cart-quantity').innerHTML = cartQuantity;
+}
+
 document.querySelectorAll('.js-add-to-cart-button')
   .forEach(button => {
     button.addEventListener('click', () => {
       const productId = button.dataset.productId;
-      let cartItem, cartquantity = 0;
-      cart.forEach(item => {
-        if (item.productId === productId) {
-          cartItem = item;
-        }
-      });
-
-      if (cartItem) {
-        cartItem.quantity++;
-      }
-      else {
-        cart.push({
-          productId,
-          quantity: 1
-        });
-      }
-
-      //Calculate total Quantity in the cart
-      cart.forEach(item => {
-        cartquantity += item.quantity;
-      });
-
-      document.querySelector('.js-cart-quantity').innerHTML = cartquantity;
+      addToCart(productId);
+      updateCartQuantity();
+      console.log(cart);
     });
+
   });

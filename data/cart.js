@@ -37,7 +37,7 @@ export function removeFromCart(productId) {
     }
   });
   cart = newCart;
-  console.log(cart);
+  //console.log(cart);
   // //Finding the items to delete based on dataset product id peovided by the delete clicked link.
   // console.log(cart);
   // let matchingItemIndex = -1;

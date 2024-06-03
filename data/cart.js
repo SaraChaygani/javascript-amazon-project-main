@@ -1,6 +1,4 @@
-
 export let cart = JSON.parse(localStorage.getItem('cart'));
-
 if (!cart) {
   cart = [{
     productId: 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6',
@@ -11,8 +9,7 @@ if (!cart) {
     quantity: 1
   }];
 }
-
-function saveToStorage() {
+export function saveToStorage() {
   localStorage.setItem('cart', JSON.stringify(cart));
 }
 //Adding items to cart id the items doesn't exist, otherwise, increase the quantity of the item if it already exists.
@@ -46,5 +43,28 @@ export function removeFromCart(productId) {
     }
   });
   cart = newCart;
+  saveToStorage();
+}
+
+//Calculate cart quantity
+export function calculateCartQuantity() {
+  let cartQuantity = 0
+  cart.forEach(item => {
+    cartQuantity += item.quantity;
+  });
+  return cartQuantity;
+}
+
+//update quantity function
+export function updateQuantity(productId, newQuantity) {
+  let checkoutQuantityElement = document.querySelector('.js-checkout-quantity');
+  cart.forEach(cartItem => {
+    if (cartItem.productId == productId) {
+      cartItem.quantity = newQuantity;
+    }
+  });
+  document.querySelector(`.js-quantity-label-${productId}`).innerHTML = newQuantity;
+  checkoutQuantityElement.innerHTML = `Checkout (${calculateCartQuantity()} items)`;
+  document.querySelector(`.js-cart-item-container-${productId}`).classList.remove('is-editing-quantity');
   saveToStorage();
 }

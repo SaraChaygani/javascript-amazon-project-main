@@ -1,7 +1,6 @@
-import { cart } from '../data/cart.js';
+import { calculateCartQuantity, cart, removeFromCart, updateQuantity } from '../data/cart.js';
 import { products } from '../data/products.js';
 import { convertCurrency } from './utils/utility.js';
-import { removeFromCart } from '../data/cart.js';
 
 //Generate the HTML FOR THE CHECKOUT PAGE
 
@@ -30,13 +29,15 @@ cart.forEach(cartItem => {
           <div class="product-price">
             $${convertCurrency(matchingProduct.priceCents)}
           </div>
-          <div class="product-quantity">
+          <div class="product-quantity js-product-quantity-${matchingProduct.id}">
             <span>
-              Quantity: <span class="quantity-label">${cartItem.quantity}</span>
+              Quantity: <span class="quantity-label js-quantity-label-${matchingProduct.id}">${cartItem.quantity}</span>
             </span>
-            <span class="update-quantity-link link-primary">
+            <span class="update-quantity-link link-primary js-update-quantity-link" data-product-id= ${matchingProduct.id}>
               Update
             </span>
+            <input class="quantity-input js-quantity-input-${matchingProduct.id}">
+            <span class="save-quantity-link link-primary js-save-quantity-link" data-product-id= ${matchingProduct.id}>Save</span>
             <span class="delete-quantity-link link-primary js-delete-link"  data-product-id= ${matchingProduct.id}>
               Delete
             </span>
@@ -90,17 +91,97 @@ cart.forEach(cartItem => {
     `;
 });
 document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
+let checkoutQuantityElement = document.querySelector('.js-checkout-quantity');
+checkoutQuantityElement.innerHTML = `Checkout (${calculateCartQuantity()} items)`;
 
 document.querySelectorAll('.js-delete-link')
   .forEach(link => {
     link.addEventListener('click', () => {
       const { productId } = link.dataset;
       removeFromCart(productId);
-
       const container = document.querySelector(`.js-cart-item-container-${productId}`);
       container.remove();
+      checkoutQuantityElement.innerHTML = `Checkout (${calculateCartQuantity()} items)`;
     });
   });
+
+checkoutQuantityElement.innerHTML = `Checkout (${calculateCartQuantity()} items)`;
+
+//Retrieve the product that's being edited when clicking on update
+document.querySelectorAll('.js-update-quantity-link')
+  .forEach(link => {
+    const { productId } = link.dataset;
+    link.addEventListener('click', () => {
+      document.querySelector(`.js-cart-item-container-${productId}`).classList.add('is-editing-quantity');
+    });
+  });
+
+
+//ADD EVENT LISTENER TO ALL SAVE LINKS
+document.querySelectorAll('.js-save-quantity-link')
+  .forEach(saveLink => {
+    const { productId } = saveLink.dataset;
+    saveLink.addEventListener('click', () => {
+      const newQuantity = Number(document.querySelector(`.js-quantity-input-${productId}`).value);
+      if (newQuantity > 0 && newQuantity < 1000) {
+        updateQuantity(productId, newQuantity);
+      }
+      else {
+        document.querySelector(`.js-cart-item-container-${productId}`).classList.remove('is-editing-quantity');
+      }
+
+    });
+  });
+
+//WHEN THE USERS ENTERS A QUANTITY <=0 OR >1000 AN ALERT MESSAGE DISPLAYS BELOW.
+//ALGORITHM
+//1- get the quantity input element
+//2- add an event listenr to it on keyup
+//3- when the user enters the number, the following validation should run to check 
+//-> if the number entered is <=0 and >1000 
+//1- add a paragraph element below the input displaying an alert message
+//2- give the message a class to style it using css.
+//3- when the user enter a valid number or delete the whole input, then the message disappears.
+//4- if the user doesn't enter anything and clicks save. keep the original quantity for the item.
+
+// function isNumber(input) {
+//   return typeof input === 'number';
+// }
+
+document.querySelectorAll('.js-update-quantity-link')
+  .forEach(updateLink => {
+    const { productId } = updateLink.dataset;
+    const quantityInput = document.querySelector(`.js-quantity-input-${productId}`);
+    const alertElement = document.createElement('p');
+    const parentElement = document.querySelector(`.js-product-quantity-${productId}`);
+
+    const quantityInputElement = document.querySelector(`.js-quantity-input-${productId}`);
+    quantityInputElement.addEventListener('keyup', (event) => {
+      const quantityInputValue = parseInt(quantityInput.value);
+
+      if (quantityInputValue <= 0 || quantityInputValue > 1000) {
+        alertElement.textContent = 'The quantity can not be less than 0 or greater than 1000!';
+        alertElement.classList.add('alert-message');
+        parentElement.appendChild(alertElement);
+      }
+      else {
+        if (parentElement.contains(alertElement)) {
+          parentElement.removeChild(alertElement);
+        }
+        if (event.key === 'Enter') {
+          if (!isNaN(quantityInputValue)) {
+            updateQuantity(productId, quantityInputValue);
+          } else {
+            document.querySelector(`.js-cart-item-container-${productId}`).classList.remove('is-editing-quantity');
+          }
+        }
+      }
+    });
+  });
+
+
+
+
 
 
 

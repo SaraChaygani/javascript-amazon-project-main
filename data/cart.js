@@ -71,3 +71,16 @@ export function updateQuantity(productId, newQuantity) {
   document.querySelector(`.js-cart-item-container-${productId}`).classList.remove('is-editing-quantity');
   saveToStorage();
 }
+
+//Update the delivery options
+export function updateDeliveryOption(productId, deliveryOptionId) {
+  let matchingItem;
+  cart.forEach(cartItem => {
+    if (cartItem.productId === productId) {
+      matchingItem = cartItem;
+    }
+  });
+
+  matchingItem.deliveryOptionId = deliveryOptionId;
+  saveToStorage();
+}

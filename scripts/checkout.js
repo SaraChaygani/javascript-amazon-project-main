@@ -3,6 +3,7 @@ import { products } from '../data/products.js';
 import { convertCurrency } from './utils/utility.js';
 import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { deliveryOptions } from '../data/deliveryOptions.js';
+import { updateDeliveryOption } from '../data/cart.js';
 
 
 const today = dayjs();
@@ -91,7 +92,8 @@ function deliveryOptionsHTML(matchingProduct, cartItem) {
 
     //Retreiving the checked option
     const isChecked = deliveryOption.id === cartItem.deliveryOptionId;
-    html += `<div class="delivery-option">
+    html += `<div class="delivery-option js-delivery-option"
+    data-product-id ="${matchingProduct.id}" data-delivery-option-id ="${deliveryOption.id}">
         <input type="radio"
           ${isChecked ? 'checked' : ''}  
         class="delivery-option-input"
@@ -121,6 +123,14 @@ document.querySelectorAll('.js-delete-link')
       const container = document.querySelector(`.js-cart-item-container-${productId}`);
       container.remove();
       checkoutQuantityElement.innerHTML = `Checkout (${calculateCartQuantity()} items)`;
+    });
+  });
+
+document.querySelectorAll('.js-delivery-option').
+  forEach(deliveryOption => {
+    deliveryOption.addEventListener('click', () => {
+      const { productId, deliveryOptionId } = deliveryOption.dataset;
+      updateDeliveryOption(productId, deliveryOptionId);
     });
   });
 

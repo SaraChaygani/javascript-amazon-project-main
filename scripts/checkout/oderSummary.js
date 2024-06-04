@@ -6,11 +6,6 @@ import { deliveryOptions, getDeliveryOption } from '../../data/deliveryOptions.j
 import { renderPaymentSummary } from './paymentSummary.js';
 
 
-
-// const today = dayjs();
-// const deliveryDate = today.add(7, 'day');
-// console.log(deliveryDate.format('dddd, MMMM D'));
-
 //Generate the HTML FOR THE CHECKOUT PAGE
 export function renderOrderSummary() {
 
@@ -103,8 +98,9 @@ export function renderOrderSummary() {
   }
 
   document.querySelector('.js-order-summary').innerHTML = cartSummaryHTML;
-  // let checkoutQuantityElement = document.querySelector('.js-checkout-quantity');
-  // checkoutQuantityElement.innerHTML = `Checkout (${calculateCartQuantity()} items)`;
+
+
+  //DELETE CONTROLLER
 
   document.querySelectorAll('.js-delete-link')
     .forEach(link => {
@@ -113,7 +109,7 @@ export function renderOrderSummary() {
         removeFromCart(productId);
         const container = document.querySelector(`.js-cart-item-container-${productId}`);
         container.remove();
-        // checkoutQuantityElement.innerHTML = `Checkout (${calculateCartQuantity()} items)`;
+        renderPaymentSummary();
       });
     });
 
@@ -127,7 +123,6 @@ export function renderOrderSummary() {
       });
     });
 
-  // checkoutQuantityElement.innerHTML = `Checkout (${calculateCartQuantity()} items)`;
 
   //Retrieve the product that's being edited when clicking on update
   document.querySelectorAll('.js-update-quantity-link')
@@ -147,6 +142,7 @@ export function renderOrderSummary() {
         const newQuantity = Number(document.querySelector(`.js-quantity-input-${productId}`).value);
         if (newQuantity > 0 && newQuantity < 1000) {
           updateQuantity(productId, newQuantity);
+          renderPaymentSummary();
         }
         else {
           document.querySelector(`.js-cart-item-container-${productId}`).classList.remove('is-editing-quantity');
@@ -179,6 +175,7 @@ export function renderOrderSummary() {
           if (event.key === 'Enter') {
             if (!isNaN(quantityInputValue)) {
               updateQuantity(productId, quantityInputValue);
+              renderPaymentSummary();
             } else {
               document.querySelector(`.js-cart-item-container-${productId}`).classList.remove('is-editing-quantity');
             }

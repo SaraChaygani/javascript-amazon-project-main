@@ -25,7 +25,7 @@ export function renderPaymentSummary() {
           </div>
 
           <div class="payment-summary-row">
-            <div class="js-checkout-quantity">Checkout (${quantity}):</div>
+            <div class="js-checkout-quantity">Items (${quantity}):</div>
             <div class="payment-summary-money">$${convertCurrency(itemsTotalPrice)}</div>
           </div>
 

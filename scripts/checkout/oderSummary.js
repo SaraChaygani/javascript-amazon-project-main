@@ -10,8 +10,8 @@ import { renderCheckoutHeader } from './checkoutHeader.js';
 
 //Generate the HTML FOR THE CHECKOUT PAGE
 export function renderOrderSummary() {
-
   let cartSummaryHTML = '';
+
   cart.forEach(cartItem => {
     const productId = cartItem.productId;
     const matchingProduct = getProduct(productId);
@@ -21,7 +21,9 @@ export function renderOrderSummary() {
     let deliveryOption = getDeliveryOption(deliveryOptionId);
     const dateString = calculateDeliveryDate(deliveryOption);
 
-    cartSummaryHTML += ` <div class="cart-item-container js-cart-item-container-${matchingProduct.id}">
+    cartSummaryHTML += ` <div class="cart-item-container
+    js-cart-item-container
+    js-cart-item-container-${matchingProduct.id}">
         <div class="delivery-date">
           Delivery date: ${dateString}
         </div>
@@ -46,7 +48,7 @@ export function renderOrderSummary() {
               </span>
               <input class="quantity-input js-quantity-input-${matchingProduct.id}">
               <span class="save-quantity-link link-primary js-save-quantity-link" data-product-id= ${matchingProduct.id}>Save</span>
-              <span class="delete-quantity-link link-primary js-delete-link"  data-product-id= ${matchingProduct.id}>
+              <span class="delete-quantity-link link-primary js-delete-link js-delete-link-${matchingProduct.id}"  data-product-id= ${matchingProduct.id}>
                 Delete
               </span>
             </div>

@@ -30,9 +30,9 @@ describe('test suite: RenderOrderSummary', () => {
   });
 
   //after each hook
-  afterEach(() => {
-    document.querySelector('.js-test-container').innerHTML = '';
-  });
+  // afterEach(() => {
+  //   document.querySelector('.js-test-container').innerHTML = '';
+  // });
 
   it('displays the cart', () => {
     expect(document.querySelectorAll('.js-cart-item-container').length).toEqual(2);
@@ -58,5 +58,14 @@ describe('test suite: RenderOrderSummary', () => {
     //Check if the mocked cart is updated correctly.
     expect(cart.length).toEqual(1);
     expect(cart[0].productId).toEqual(productId2);
+  });
+
+  it('updates delivery options.', () => {
+    document.querySelector(`.js-delivery-option-${cart[0].productId}-3`).click();
+
+    expect(document.querySelector(`.js-delivery-option-input-${cart[0].productId}-3`).checked).toEqual(true);
+
+    expect(cart[0].productId).toEqual(productId1);
+    expect(cart[0].deliveryOptionId).toEqual('3');
   });
 });

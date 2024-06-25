@@ -1,11 +1,10 @@
-import { calculateCartQuantity, cart, removeFromCart, updateQuantity, updateDeliveryOption } from '../../data/cart.js';
-import { products, getProduct } from '../../data/products.js';
+import { cart, removeFromCart, updateQuantity, updateDeliveryOption } from '../../data/cart.js';
+import { getProduct } from '../../data/products.js';
 import { convertCurrency } from '../utils/utility.js';
-import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
+//import dayjs from 'https://unpkg.com/dayjs@1.11.10/esm/index.js';
 import { deliveryOptions, getDeliveryOption, calculateDeliveryDate } from '../../data/deliveryOptions.js';
 import { renderPaymentSummary } from './paymentSummary.js';
 import { renderCheckoutHeader } from './checkoutHeader.js';
-
 
 
 //Generate the HTML FOR THE CHECKOUT PAGE
@@ -37,7 +36,7 @@ export function renderOrderSummary() {
               ${matchingProduct.name}
             </div>
             <div class="product-price">
-              $${convertCurrency(matchingProduct.priceCents)}
+             ${matchingProduct.getPrice()}
             </div>
             <div class="product-quantity js-product-quantity-${matchingProduct.id}">
               <span>

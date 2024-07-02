@@ -74,23 +74,27 @@ export class Appliance extends Product {
 export let products = [];
 
 export function loadProductsFetch() {
-  const promise = fetch('https://supersimplebackend.dev/products').then((response) => {
-    return response.json();
-  }).then((productsData) => {
-    products = productsData.map(productDetails => {
-      if (productDetails.type === 'clothing') {
-        return new Clothing(productDetails);
-      }
-      if (productDetails.type === 'appliance') {
-        return new Appliance(productDetails);
-      }
-      return new Product(productDetails);
-    });
-    console.log('load products');
-  });
+  const promise = fetch('https://supersimplebackend.dev/products')
+    .then((response) => {
+      return response.json();
+    }).then((productsData) => {
+      products = productsData.map(productDetails => {
+        if (productDetails.type === 'clothing') {
+          return new Clothing(productDetails);
+        }
+        if (productDetails.type === 'appliance') {
+          return new Appliance(productDetails);
+        }
+        return new Product(productDetails);
+      });
+      console.log('load products');
+    })/*.catch(() => {
+      console.log('Unexpected error, try again later!');
+    });*/
 
   return promise;
 }
+
 
 /*
 loadProductsFetch().then(() => {

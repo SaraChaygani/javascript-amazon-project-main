@@ -1,6 +1,6 @@
 import { loadFromLocalStorage, cart } from "../../data/cart.js";
 import { renderOrderSummary } from "../../scripts/checkout/oderSummary.js";
-import { loadProducts } from "../../data/products.js";
+import { loadProducts, loadProductsFetch } from "../../data/products.js";
 
 describe('test suite: RenderOrderSummary', () => {
   const productId1 = 'e43638ce-6aa0-4b85-b27f-e1d07eb678c6';
@@ -9,7 +9,9 @@ describe('test suite: RenderOrderSummary', () => {
   //USING HOOKS
 
   beforeAll((done) => {
-    loadProducts(done);
+    loadProductsFetch().then(() => {
+      done();
+    });
   });
   beforeEach(() => {
     spyOn(localStorage, 'setItem');

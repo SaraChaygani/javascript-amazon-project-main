@@ -2,20 +2,22 @@ import { renderCheckoutHeader } from "./checkout/checkoutHeader.js";
 import { renderOrderSummary } from "./checkout/oderSummary.js";
 import { renderPaymentSummary } from "./checkout/paymentSummary.js";
 import { loadProducts, loadProductsFetch } from "../data/products.js";
-import { loadCart } from "../data/cart.js";
+import { loadCart, loadCartFetch } from "../data/cart.js";
 //import '../data/car.js';
 //import '../data/backend-practice.js';
 
 
 async function loadPage() {
   try {
-    await loadProductsFetch();
+    await Promise.all([loadProductsFetch(), loadCartFetch()]);
+    // await loadProductsFetch();
+    // loadCartFetch();
 
-    const value = await new Promise((resolve) => {
-      loadCart(() => {
-        resolve('va');
-      });
-    });
+    // const value = await new Promise((resolve) => {
+    //   loadCart(() => {
+    //     resolve('va');
+    //   });
+    // });
   }
 
   catch (error) {

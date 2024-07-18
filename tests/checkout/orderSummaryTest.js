@@ -8,10 +8,8 @@ describe('test suite: RenderOrderSummary', () => {
 
   //USING HOOKS
 
-  beforeAll((done) => {
-    loadProductsFetch().then(() => {
-      done();
-    });
+  beforeAll(async () => {
+    await loadProductsFetch();
   });
   beforeEach(() => {
     spyOn(localStorage, 'setItem');

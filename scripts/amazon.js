@@ -1,4 +1,4 @@
-import { cart, addToCart, calculateCartQuantity } from '../data/cart.js';
+import { cart, addToCart, calculateCartQuantity, updateCartQuantityHTML } from '../data/cart.js';
 import { products, loadProducts } from '../data/products.js';
 import { convertCurrency } from './utils/utility.js';
 
@@ -61,8 +61,7 @@ function renderProductsGrid() {
       </div>`;
   });
 
-  let cartQuantityElement = document.querySelector('.js-cart-quantity');
-  cartQuantityElement.innerHTML = calculateCartQuantity();
+  updateCartQuantityHTML();
 
   //Make the add to cart button interactive
   document.querySelector('.js-products-grid').innerHTML = productsHTML;
@@ -72,7 +71,8 @@ function renderProductsGrid() {
       button.addEventListener('click', () => {
         const productId = button.dataset.productId;
         addToCart(productId);
-        cartQuantityElement.innerHTML = calculateCartQuantity();
+        // cartQuantityElement.innerHTML = calculateCartQuantity();
+        updateCartQuantityHTML();
       });
     });
 }

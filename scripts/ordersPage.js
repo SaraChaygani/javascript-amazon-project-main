@@ -1,9 +1,9 @@
 import { orders } from "../data/orders.js";
 import { getProduct, loadProductsFetch } from "../data/products.js";
 import { dateToString, convertCurrency } from "./utils/utility.js";
-import { cart } from "../data/cart.js";
+import { addToCart, updateCartQuantityHTML } from "../data/cart.js";
 
-
+console.log(orders);
 async function generateOrdersHTML() {
 
   await loadProductsFetch();
@@ -49,15 +49,15 @@ async function generateOrdersHTML() {
                 <div class="product-quantity">
                   Quantity: ${orderedProduct.quantity}
                 </div>
-                <button class="buy-again-button button-primary">
+                <button class="buy-again-button js-buy-again-button button-primary" data-product-id = ${orderedProduct.productId}>
                   <img class="buy-again-icon" src="images/icons/buy-again.png">
                   <span class="buy-again-message">Buy it again</span>
                 </button>
               </div>
 
               <div class="product-actions">
-                <a href="tracking.html">
-                  <button class="track-package-button button-secondary">
+                <a >
+                  <button class="track-package-button button-secondary js-track-package-button" data-product-id = ${orderedProduct.productId} data-order-id = ${order.id}>
                     Track package
                   </button>
                 </a>
@@ -68,8 +68,25 @@ async function generateOrdersHTML() {
     html += `</div></div>`;
     document.querySelector('.js-orders-grid').innerHTML = html;
   });
+  //making button buyitagain interactive
+  document.querySelectorAll(`.js-buy-again-button`).forEach(button => {
+    button.addEventListener('click', () => {
+      const productId = button.dataset.productId;
+      console.log('clicked');
+      addToCart(productId);
+      updateCartQuantityHTML();
+    });
+  });
+
+  //Making track package interactive
+  document.querySelectorAll('.js-track-package-button').forEach(button => {
+    button.addEventListener('click', () => {
+      const orderId = button.dataset.orderId;
+      const productId = button.dataset.productId;
+
+      window.location.href = `tracking.html?orderId=${orderId}&productId=${productId}`;
+    });
+  });
 }
 
 generateOrdersHTML();
-
-

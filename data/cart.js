@@ -23,7 +23,14 @@ export function saveToStorage() {
 //Adding items to cart id the items doesn't exist, otherwise, increase the quantity of the item if it already exists.
 export function addToCart(productId) {
   let matchingItem;
-  const quantity = Number(document.querySelector(`.js-quantity-selector-${productId}`).value);
+  let quantity = 1;
+  let selectedQuantity = document.querySelector(`.js-quantity-selector-${productId}`);
+  // quantity = !selectedQuantity ? Number(selectedQuantity.value) : 1;
+
+  if (selectedQuantity !== null) {
+    quantity = Number(selectedQuantity.value);
+  }
+
   cart.forEach(cartItem => {
     if (cartItem.productId === productId) {
       matchingItem = cartItem;
@@ -40,7 +47,9 @@ export function addToCart(productId) {
       deliveryOptionId: '1'
     });
   }
+
   saveToStorage();
+  console.log(cart);
 }
 
 //Deleting items from the cart and generating updated HTML with updated Cart.
@@ -107,4 +116,10 @@ export async function loadCartFetch() {
   const response = await fetch('https://supersimplebackend.dev/cart');
   const fetchedCart = await response.text();
   console.log(fetchedCart);
+}
+
+//update cart quantity html when a new item is added
+export function updateCartQuantityHTML() {
+  let cartQuantityElement = document.querySelector('.js-cart-quantity');
+  cartQuantityElement.innerHTML = calculateCartQuantity();
 }
